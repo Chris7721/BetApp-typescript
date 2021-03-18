@@ -1,7 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {ReactComponent as Facebook} from '../assets/icons/facebook.svg'
-import '../assets/css/modal.scss'
 import {useFormik} from 'formik'
 import {signIn} from '../store/actions/auth'
 const Login = ({signIn, onLogin}) => {

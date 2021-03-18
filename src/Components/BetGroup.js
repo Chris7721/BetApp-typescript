@@ -2,7 +2,6 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {fetchMatches} from '../store/actions'
 import BetMatch from './BetMatch'
-import '../assets/css/betGroup.scss'
 const BetInfo = props => {
   const renderMatches = () => {
     let theDates = []

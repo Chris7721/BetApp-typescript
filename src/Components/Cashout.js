@@ -1,6 +1,5 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import '../assets/css/cashout.scss'
 import {ReactComponent as Arrow} from '../assets/icons/arrow.svg'
 import SingleBetMatch from './SingleBetMatch'
 const Cashout = ({authUser, placedBets}) => {

@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import {connect} from 'react-redux'
 import axios from 'axios'
-import '../assets/css/betAmount.scss'
 import {useFormik} from 'formik'
 import BetPlaced from './BetPlaced'
 import {ReactComponent as Cancel} from '../assets/icons/cancel.svg'

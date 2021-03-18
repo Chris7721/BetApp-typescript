@@ -1,6 +1,5 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import '../assets/css/mainView.scss'
 import {fetchMatches} from '../store/actions'
 import BetGroup from '../Components/BetGroup'
 import {ReactComponent as Refresh} from '../assets/icons/refresh.svg'

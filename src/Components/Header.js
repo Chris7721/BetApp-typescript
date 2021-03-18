@@ -1,7 +1,5 @@
 import React, {useState} from 'react'
 import * as Yup from 'yup'
-import '../assets/css/header.scss'
-import '../assets/css/modal.scss'
 import Sidebar from './Sidebar'
 import Modal from './Modal'
 import UserForm from './UserForm'

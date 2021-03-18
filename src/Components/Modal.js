@@ -1,6 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import '../assets/css/modal.scss'
 class Modal extends React.Component {
   constructor(props) {
     super(props)

@@ -1,5 +1,4 @@
 import React from 'react'
-import '../assets/css/leagues.scss'
 import {ReactComponent as Star} from '../assets/icons/star.svg'
 import {fetchLeagues} from '../store/actions'
 import {connect} from 'react-redux'

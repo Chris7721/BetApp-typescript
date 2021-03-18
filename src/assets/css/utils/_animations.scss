@@ -42,3 +42,18 @@
     transform: scale(1.25);
   }
 }
+
+.slide-up-enter,
+.slide-up-exit-active {
+  // can be used for initialization, ie. the initial state of the element, before it is visible
+  transition: all 0.3s cubic-bezier(0.36, -0.01, 0.13, 0.97);
+  transform: translateY(290px) !important;
+  opacity: 0 !important;
+}
+.slide-up-enter-active {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  transition: all 0.3s cubic-bezier(0.36, -0.01, 0.13, 0.97) !important;
+}
+.slide-up-exit {
+}

@@ -1,7 +1,6 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
 import Leagues from './Leagues'
-import '../assets/css/sidebar.scss'
 import {ReactComponent as Cancel} from '../assets/icons/cancel.svg'
 import {ReactComponent as Home} from '../assets/icons/home.svg'
 import {ReactComponent as Search} from '../assets/icons/search.svg'

@@ -3,7 +3,6 @@ import {connect} from 'react-redux'
 import SelectedMatches from './SelectedMatches'
 import Cashout from './Cashout'
 import BookBet from './BookBet'
-import '../assets/css/betInfo.scss'
 
 const BetInfo = props => {
   const [currentComp, setCurrentComp] = useState('betslip')

@@ -1,6 +1,5 @@
 import React from 'react'
 import {v4 as uuidv4} from 'uuid'
-import '../assets/css/betPlaced.scss'
 import {shortenText} from '../utils/utils'
 import {ReactComponent as Confirm} from '../assets/icons/confirm.svg'
 
