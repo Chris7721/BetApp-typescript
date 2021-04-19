@@ -1,23 +1,20 @@
-import React, {useState} from 'react'
+import React, {FC, useState} from 'react'
 import {connect} from 'react-redux'
 import * as Yup from 'yup'
 import {useFormik} from 'formik'
-import {signUp, signIn} from '../store/actions/auth'
-const Register = ({signUp, onRegistered, currentComp, signIn}) => {
-  //  console.log(currentComp)
-  const [error, setError] = useState('')
-  // const formik = useFormik({
-  //     initialValues: {
-  //           email: '',
-  //           password: ''
-  //     },
-  //     async onSubmit(values) {
-  //         console.log("email: "+ formik.values.email)
-  //       await signUp({email: formik.values.email, password: formik.values.password})
-  //         onRegistered()
-  //         //display errors, check if the api returns an error the use formik's error to display error
-  //     }
-  //   });
+import {signUp, signIn, signOut} from '../store/actions/auth'
+import {authUser, User} from '../types/types'
+import {bindActionCreators} from 'redux'
+import {ThunkDispatch} from 'redux-thunk'
+import {AppActions} from '../types/actions'
+import {AppState} from '../store/configureStore'
+type ownProp = {
+  onRegistered: Function
+  currentComp: string
+}
+type Props = LinkDispatchProps & LinkStateProps & ownProp
+const UserForm: FC<Props> = ({signUp, onRegistered, currentComp, signIn}) => {
+  const [error, setError] = useState<string>('')
   const {handleSubmit, getFieldProps, touched, errors} = useFormik({
     initialValues: {
       email: '',
@@ -34,7 +31,6 @@ const Register = ({signUp, onRegistered, currentComp, signIn}) => {
           await signUp({email: values.email, password: values.password})
         } else {
           await signIn({email: values.email, password: values.password})
-          // alert("login")
         }
         onRegistered()
       } catch (err) {
@@ -46,7 +42,6 @@ const Register = ({signUp, onRegistered, currentComp, signIn}) => {
   const buttonText = currentComp === 'Register' ? 'Register' : 'Login'
   return (
     <form onSubmit={handleSubmit}>
-      {/* {error ? (<span className="error">{error}</span>): null} */}
       <div className="uk-width-1-1">
         <span className="error">
           {error ? <span className="error">{error}</span> : null}
@@ -71,17 +66,27 @@ const Register = ({signUp, onRegistered, currentComp, signIn}) => {
       >
         {buttonText}
       </button>
-      {/* <div className="login__option">
-            <div className="facebook-login">
-                <Facebook />
-            </div>
-            <p className="login__option-detail">Login with Facebook</p>
-        </div> */}
     </form>
   )
 }
 
-const mapStateToProps = state => {
-  return {authUser: state.authUser}
+interface LinkStateProps {
+  authUser: authUser
 }
-export default connect(mapStateToProps, {signUp, signIn})(Register)
+
+const mapStateToProps = (state: AppState): LinkStateProps => {
+  return {
+    authUser: state.authUser
+  }
+}
+interface LinkDispatchProps {
+  signIn: (user: User) => void
+  signUp: (user: User) => void
+}
+const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>): LinkDispatchProps => {
+  return {
+    signIn: bindActionCreators(signIn, dispatch),
+    signUp: bindActionCreators(signUp, dispatch)
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(UserForm)

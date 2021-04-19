@@ -1,23 +1,28 @@
-import React from 'react'
+import React, {FC} from 'react'
 import {ReactComponent as Star} from '../assets/icons/star.svg'
-import {fetchLeagues} from '../store/actions'
 import {connect} from 'react-redux'
 import {NavLink} from 'react-router-dom'
 import ListLoader from './Loaders/ListLoader'
+import {league} from '../types/types'
+import {AppState} from '../store/configureStore'
 
-const Leagues = props => {
-  const appendClass = id => {
-    document.querySelector(`#${id}`).classList.add('selected')
+type ownProp = {
+  leagueClicked?: () => any
+}
+type Props = LinkStateProps & ownProp
+const Leagues: FC<Props> = props => {
+  const appendClass = (id: string) => {
+    document.querySelector(`#${id}`)!.classList.add('selected')
   }
   const renderLeagues = () => {
-    return props.leagues.map(league => (
+    return props.leagues!.map(league => (
       <li className="list-group-item" key={league.key}>
         <NavLink
           className="league-link"
+          onClick={() => props.leagueClicked!()}
           activeStyle={{
-            fontWeight: '700'
+            fontWeight: 700
           }}
-          onClick={() => props.leagueClicked()}
           to={`/league/${league.key}`}
         >
           {league.title}
@@ -31,7 +36,7 @@ const Leagues = props => {
   return (
     <div className="leagues">
       <ul className="uk-list uk-list-divider list-group">
-        {props.leagues.length > 0 ? (
+        {props.leagues!.length > 0 ? (
           renderLeagues()
         ) : (
           <div className="loaders">
@@ -44,7 +49,13 @@ const Leagues = props => {
     </div>
   )
 }
-const mapStateToProps = state => {
-  return {leagues: state.leagues}
+interface LinkStateProps {
+  leagues?: league[]
 }
-export default connect(mapStateToProps, {fetchLeagues})(Leagues)
+const mapStateToProps = (state: AppState): LinkStateProps => {
+  return {
+    leagues: state.leagues
+  }
+}
+
+export default connect(mapStateToProps, null)(Leagues)

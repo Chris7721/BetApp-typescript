@@ -1,7 +1,7 @@
 @import './utils/variables';
 @import './utils/mixins';
 @import './utils/animations';
-@import './utils/variables';
+
 body {
   font-family: 'mukta' !important;
 }
@@ -195,8 +195,6 @@ body {
 .main {
   background-color: #ff0;
 }
-
-@import './utils/variables';
 .betinfo {
   min-height: 100%;
   background-color: #fff;
@@ -1247,6 +1245,14 @@ body {
   .pay {
     background-color: $button-hover;
     color: #fff;
+    display: flex;
+    align-items: center;
+    svg {
+      display: block;
+      margin-left: 6px !important;
+      margin-top: 0 !important;
+      margin-right: 0 !important;
+    }
     &.active {
       background-color: $odd-color;
       color: #fff;

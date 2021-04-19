@@ -1,8 +1,14 @@
 import axios from 'axios'
+import {Dispatch} from 'redux'
+import {AppActions} from '../../types/actions'
+import {SIGN_IN, SIGN_OUT, SIGN_UP} from '../../types/authActions'
+import {APP_LOAD, BET_AMOUNT, FETCH_BETS} from '../../types/matchActions'
+import {User} from '../../types/types'
 import {convertObjectToArray} from '../../utils/utils'
+import {AppState} from '../configureStore'
 const KEY = 'AIzaSyB7dKEaTf00MBiwAlkx9R5tjIhr9txA_2E'
 
-export const signUp = user => async (dispatch, getState) => {
+export const signUp = (user: User) => async (dispatch: Dispatch<AppActions>) => {
   try {
     const response = await axios.post(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${KEY}`, {
       ...user,
@@ -11,14 +17,13 @@ export const signUp = user => async (dispatch, getState) => {
     const betAmount = await axios.put(`https://betapp-54dbf.firebaseio.com/balance/${response.data.localId}.json`, {
       betAmount: 1500
     })
-    // console.log(response.data)
     localStorage.setItem('refresh', response.data.refreshToken)
     dispatch({
-      type: 'SIGN_UP',
+      type: SIGN_UP,
       payload: response.data
     })
     dispatch({
-      type: 'BET_AMOUNT',
+      type: BET_AMOUNT,
       payload: betAmount.data.betAmount
     })
   } catch (err) {
@@ -26,7 +31,7 @@ export const signUp = user => async (dispatch, getState) => {
   }
 }
 
-export const signIn = user => async (dispatch, getState) => {
+export const signIn = (user: User) => async (dispatch: Dispatch<AppActions>) => {
   try {
     const response = await axios.post(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${KEY}`, {
       ...user,
@@ -36,17 +41,17 @@ export const signIn = user => async (dispatch, getState) => {
     const betAmount = await axios.get(`https://betapp-54dbf.firebaseio.com/balance/${response.data.localId}.json`)
     // console.log("The returned betAmount is: ", betAmount)
     dispatch({
-      type: 'BET_AMOUNT',
+      type: BET_AMOUNT,
       payload: betAmount.data.betAmount
     })
     const {data} = await axios.get(`https://betapp-54dbf.firebaseio.com/betlist/${response.data.localId}.json`)
     dispatch({
-      type: 'FETCH_BETS',
+      type: FETCH_BETS,
       payload: convertObjectToArray(data)
     })
     localStorage.setItem('refresh', response.data.refreshToken)
     dispatch({
-      type: 'SIGN_IN',
+      type: SIGN_IN,
       payload: response.data
     })
   } catch (err) {
@@ -54,8 +59,7 @@ export const signIn = user => async (dispatch, getState) => {
   }
 }
 
-export const refreshToken = user => async (dispatch, getState) => {
-  // console.log(email, password)
+export const refreshToken = () => async (dispatch: Dispatch<AppActions>) => {
   try {
     const refreshToken = localStorage.getItem('refresh')
     if (refreshToken) {
@@ -69,11 +73,11 @@ export const refreshToken = user => async (dispatch, getState) => {
       const betAmount = await axios.get(`https://betapp-54dbf.firebaseio.com/balance/${currentUser.data.users[0].localId}.json`)
       localStorage.setItem('refresh', data.refresh_token)
       dispatch({
-        type: 'BET_AMOUNT',
+        type: BET_AMOUNT,
         payload: betAmount.data.betAmount
       })
       dispatch({
-        type: 'SIGN_IN',
+        type: SIGN_IN,
         payload: {
           idToken: data.id_token,
           refreshToken: data.refresh_token,
@@ -83,34 +87,34 @@ export const refreshToken = user => async (dispatch, getState) => {
         }
       })
       dispatch({
-        type: 'APP_LOAD',
+        type: APP_LOAD,
         payload: true
       })
     }
     dispatch({
-      type: 'APP_LOAD',
+      type: APP_LOAD,
       payload: true
     })
   } catch (err) {
     dispatch({
-      type: 'APP_LOAD',
+      type: APP_LOAD,
       payload: true
     })
   }
 }
 
-export const signOut = () => (dispatch, getState) => {
+export const signOut = () => (dispatch: Dispatch<AppActions>) => {
   localStorage.removeItem('refresh')
   dispatch({
-    type: 'SIGN_OUT'
+    type: SIGN_OUT
   })
   dispatch({
-    type: 'FETCH_BETS',
+    type: FETCH_BETS,
     payload: []
   })
 }
 
-export const makePayment = user => async (dispatch, getState) => {
+export const makePayment = (user: User) => async (dispatch: Dispatch<AppActions>) => {
   try {
     const response = await axios.post(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${KEY}`, {
       ...user,
@@ -120,7 +124,7 @@ export const makePayment = user => async (dispatch, getState) => {
       betAmount: 1500
     })
     dispatch({
-      type: 'BET_AMOUNT',
+      type: BET_AMOUNT,
       payload: betAmount.data.betAmount
     })
   } catch (err) {
@@ -128,13 +132,13 @@ export const makePayment = user => async (dispatch, getState) => {
   }
 }
 
-export const updateBetAmount = newBetAmount => async (dispatch, getState) => {
+export const updateBetAmount = (newBetAmount: number) => async (dispatch: Dispatch<AppActions>, getState: () => AppState) => {
   try {
     const betAmount = await axios.put(`https://betapp-54dbf.firebaseio.com/balance/${getState().authUser.localId}.json`, {
       betAmount: newBetAmount
     })
     dispatch({
-      type: 'BET_AMOUNT',
+      type: BET_AMOUNT,
       payload: betAmount.data.betAmount
     })
   } catch (err) {

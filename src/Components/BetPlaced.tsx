@@ -3,7 +3,10 @@ import {v4 as uuidv4} from 'uuid'
 import {shortenText} from '../utils/utils'
 import {ReactComponent as Confirm} from '../assets/icons/confirm.svg'
 
-function betPlaced({betType}) {
+type OwnProps = {
+  betType: string
+}
+function betPlaced({betType}: OwnProps) {
   const betCode = uuidv4()
   return (
     <div className="betPlaced">

@@ -1,32 +1,34 @@
-import React from 'react'
-import {connect} from 'react-redux'
-import {fetchMatches} from '../store/actions'
+import React, {ReactNode} from 'react'
+import {betMatch} from '../types/types'
 import BetMatch from './BetMatch'
-const BetInfo = props => {
+type Props = {
+  matches: betMatch[]
+}
+const BetInfo = ({matches}: Props) => {
   const renderMatches = () => {
-    let theDates = []
-    props.matches.forEach(val => theDates.push(val.commence_time))
-    let theUniques = []
-    theUniques = [...new Set(theDates)]
-    const els = []
-    let previous = 0
+    let theDates: number[] = []
+    matches.forEach((val: betMatch) => theDates.push(val.commence_time))
+    let theUniques: number[] = []
+    theUniques = [...Array.from(new Set(theDates))]
+    const els: ReactNode[] = []
+    let previous: string = ''
     theUniques.forEach((el, index, arr) => {
-      let formatedUnix = `${new Date(el * 1000).getMonth()}/${new Date(el * 1000).getDate()}`
+      let formatedUnix: string = `${new Date(el * 1000).getMonth()}/${new Date(el * 1000).getDate()}`
       let date = new Date(el * 1000)
       if (previous !== formatedUnix) {
         els.push(
           <tr key={el}>
-            <td colSpan="2" className="match_date">{`${date.getDate().toString().length === 1 ? '0' + date.getDate() : date.getDate()}/${
+            <td colSpan={2} className="match_date">{`${date.getDate().toString().length === 1 ? '0' + date.getDate() : date.getDate()}/${
               date.getMonth().toString().length === 1 ? '0' + (date.getMonth() + 1) : date.getMonth()
             }
             ${date.toLocaleString('default', {weekday: 'long'})}`}</td>
           </tr>
         )
       }
-      props.matches
+      matches
         .filter(match => match.commence_time === el)
         .forEach((match, index, arr) => {
-          els.push(<BetMatch key={match.match_id} match={match} />)
+          els.push(<BetMatch key={match.id} match={match} />)
         })
       previous = `${new Date(el * 1000).getMonth()}/${new Date(el * 1000).getDate()}`
     })
@@ -50,8 +52,4 @@ const BetInfo = props => {
   )
 }
 
-// const mapStateToProps =(state)=>{
-//     // console.log("moprps", state.posts)
-//     return {matches: state.matches}
-// }
-export default connect(null, {fetchMatches})(BetInfo)
+export default BetInfo

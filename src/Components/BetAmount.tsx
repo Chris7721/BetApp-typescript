@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, FC} from 'react'
 import {connect} from 'react-redux'
 import axios from 'axios'
 import {useFormik} from 'formik'
@@ -8,8 +8,14 @@ import Modal from './Modal'
 import {fetchBets} from '../store/actions'
 import {updateBetAmount} from '../store/actions/auth'
 import * as Yup from 'yup'
+import {authUser, betSlipMatch} from '../types/types'
+import {bindActionCreators} from 'redux'
+import {AppState} from '../store/configureStore'
+import {ThunkDispatch} from 'redux-thunk'
+import {AppActions} from '../types/actions'
 
-const BetAmount = props => {
+type Props = LinkDispatchProps & LinkStateProps
+const BetAmount: FC<Props> = props => {
   const {values, handleSubmit, getFieldProps, touched, errors, setFieldValue} = useFormik({
     initialValues: {
       betAmount: 0
@@ -23,12 +29,12 @@ const BetAmount = props => {
       } catch (err) {}
     }
   })
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [betType, setBetType] = useState('')
-  const [totalOdd, setTotalOdd] = useState(0)
-  const [bonus, setBonus] = useState(0)
-  const [potentialWin, setPotentialWin] = useState(0)
-  const setAmount = amount => {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+  const [betType, setBetType] = useState<string>('')
+  const [totalOdd, setTotalOdd] = useState<number>(0)
+  const [bonus, setBonus] = useState<number>(0)
+  const [potentialWin, setPotentialWin] = useState<number>(0)
+  const setAmount = (amount: number) => {
     setFieldValue('betAmount', amount)
   }
   const calcTotalOdd = () => {
@@ -45,11 +51,11 @@ const BetAmount = props => {
     setBonus(0.4 * potentialWin)
   }
 
-  const showBetInfo = (betType, modalState) => {
+  const showBetInfo = (betType: string, modalState: boolean) => {
     setBetType(betType)
     setIsModalOpen(modalState)
   }
-  const placeBet = async (betType, modalState) => {
+  const placeBet = async (betType: string, modalState: boolean) => {
     try {
       await axios.post(`https://betapp-54dbf.firebaseio.com/betlist/${props.authUser.localId}.json`, {
         selectedMatches: props.selectedMatches,
@@ -58,7 +64,7 @@ const BetAmount = props => {
         time: Date.now()
       })
       props.updateBetAmount(props.betAmount - values.betAmount)
-      props.fetchBets(props.authUser.localId)
+      props.fetchBets(props.authUser.localId || '')
       setBetType(betType)
       setIsModalOpen(modalState)
     } catch (e) {
@@ -169,12 +175,29 @@ const BetAmount = props => {
   )
 }
 
-const mapStateToProps = state => {
-  // console.log("moprps", state.posts)
+interface LinkStateProps {
+  authUser: authUser
+  betAmount: number
+  selectedMatches: betSlipMatch[]
+}
+interface LinkDispatchProps {
+  fetchBets: (userId: string) => void
+  updateBetAmount: (newBetAmount: number) => void
+}
+
+const mapStateToProps = (state: AppState): LinkStateProps => {
   return {
     selectedMatches: state.selectedMatches,
     authUser: state.authUser,
     betAmount: state.betAmount
   }
 }
-export default connect(mapStateToProps, {fetchBets, updateBetAmount})(BetAmount)
+
+const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>): LinkDispatchProps => {
+  return {
+    fetchBets: bindActionCreators(fetchBets, dispatch),
+    updateBetAmount: bindActionCreators(updateBetAmount, dispatch)
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BetAmount)

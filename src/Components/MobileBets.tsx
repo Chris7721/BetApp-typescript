@@ -1,14 +1,19 @@
-import React, {useState} from 'react'
-import {connect} from 'react-redux'
+import React, {FC, useState} from 'react'
 import Transition from 'react-transition-group/Transition'
 import {ReactComponent as Arrow} from '../assets/icons/arrow.svg'
 import SelectedMatches from './SelectedMatches'
 import BookBet from './BookBet'
 import Cashout from './Cashout'
-const MobileBets = props => {
-  const [isModalShowing, setIsModalShowing] = useState(false)
-  const [currentComp, setCurrentComp] = useState('bets')
-  const openModal = (comp, modalShow) => {
+import {authUser, betSlipMatch, placedBet} from '../types/types'
+type ownProps = {
+  authUser: authUser
+  placedBets: placedBet[]
+  selectedMatches: betSlipMatch[]
+}
+const MobileBets: FC<ownProps> = props => {
+  const [isModalShowing, setIsModalShowing] = useState<boolean>(false)
+  const [currentComp, setCurrentComp] = useState<string>('bets')
+  const openModal = (comp: string, modalShow: boolean) => {
     setCurrentComp(comp)
     setIsModalShowing(modalShow)
   }
@@ -20,10 +25,10 @@ const MobileBets = props => {
         return <BookBet />
       }
     }
-    return <Cashout />
+    return <Cashout authUser={props.authUser} placedBets={props.placedBets} />
   }
 
-  const addAnimation = state => {
+  const addAnimation = (state: string) => {
     if (state === 'entering') {
       return 'slide-up-enter'
     } else if (state === 'entered') {
@@ -62,10 +67,10 @@ const MobileBets = props => {
   )
 }
 
-const mapStateToProps = state => {
-  return {
-    selectedMatches: state.selectedMatches,
-    placedBets: state.placedBets
-  }
-}
-export default connect(mapStateToProps, null)(MobileBets)
+// const mapStateToProps = state => {
+//   return {
+//     selectedMatches: state.selectedMatches,
+//     placedBets: state.placedBets
+//   }
+// }
+export default MobileBets

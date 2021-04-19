@@ -1,10 +1,14 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, FC} from 'react'
 import {connect} from 'react-redux'
+import {placedBet} from '../types/types'
 import {shortenText, months_names} from '../utils/utils'
+type ownProp = {
+  bet: placedBet
+}
 
-export const SingleBetMatch = ({bet}) => {
-  const [viewLength, setViewLength] = useState(4)
-  const [shortenTextLen, setShortenTextLen] = useState(21)
+export const SingleBetMatch = ({bet}: ownProp) => {
+  const [viewLength, setViewLength] = useState<number>(4)
+  const [shortenTextLen, setShortenTextLen] = useState<number>(21)
 
   useEffect(() => {
     var matchedMedia = window.matchMedia('(max-width: 673px)')
@@ -65,8 +69,4 @@ export const SingleBetMatch = ({bet}) => {
   )
 }
 
-const mapStateToProps = state => ({})
-
-const mapDispatchToProps = {}
-
-export default connect(mapStateToProps, mapDispatchToProps)(SingleBetMatch)
+export default SingleBetMatch

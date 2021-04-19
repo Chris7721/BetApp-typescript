@@ -1,8 +1,14 @@
-import React from 'react'
-import {connect} from 'react-redux'
+import React, {useEffect} from 'react'
 import {ReactComponent as Arrow} from '../assets/icons/arrow.svg'
+import {authUser, placedBet} from '../types/types'
 import SingleBetMatch from './SingleBetMatch'
-const Cashout = ({authUser, placedBets}) => {
+type ownProp = {
+  placedBets: placedBet[]
+  authUser: authUser
+}
+
+const Cashout = ({placedBets, authUser}: ownProp) => {
+  console.log('Cashout rerendered')
   const renderBets = () => {
     if (placedBets.length > 0) {
       return placedBets.map(bet => (
@@ -41,10 +47,4 @@ const Cashout = ({authUser, placedBets}) => {
   )
 }
 
-const mapStateToProps = state => {
-  return {
-    authUser: state.authUser,
-    placedBets: state.placedBets
-  }
-}
-export default connect(mapStateToProps, null)(Cashout)
+export default Cashout

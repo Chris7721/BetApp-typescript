@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {FC, useCallback, useState} from 'react'
 import * as Yup from 'yup'
 import Sidebar from './Sidebar'
 import Modal from './Modal'
@@ -11,17 +11,26 @@ import {ReactComponent as Cancel} from '../assets/icons/cancel.svg'
 import {ReactComponent as Logo} from '../assets/icons/logo.svg'
 import {ReactComponent as Visible} from '../assets/icons/visible.svg'
 import {ReactComponent as Menu} from '../assets/icons/menu.svg'
-import {ReactComponent as User} from '../assets/icons/user.svg'
+import {ReactComponent as UserIcon} from '../assets/icons/user.svg'
 import {ReactComponent as Search} from '../assets/icons/search.svg'
 import {ReactComponent as Facebook} from '../assets/icons/facebook.svg'
 import {useFormik} from 'formik'
-export const Header = ({signIn, authUser, betAmount, signOut}) => {
-  const [error, setError] = useState('')
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [modalBody, setModalBody] = useState('')
-  const [isOpen, setIsOpen] = useState(false)
-  const [showBalance, setShowBalance] = useState(true)
-  const [currentComp, setCurrentComp] = useState('Register')
+import {authUser, User} from '../types/types'
+import {AppState} from '../store/configureStore'
+import {ThunkDispatch} from 'redux-thunk'
+import {AppActions} from '../types/actions'
+import {bindActionCreators} from 'redux'
+const onClose = () => {
+  console.log('dance')
+}
+type Props = LinkDispatchProps & LinkStateProps
+export const Header: FC<Props> = ({signIn, authUser, betAmount, signOut}) => {
+  const [error, setError] = useState<string>('')
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+  const [modalBody, setModalBody] = useState<string>('')
+  const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [showBalance, setShowBalance] = useState<boolean>(true)
+  const [currentComp, setCurrentComp] = useState<string>('Register')
   const {handleSubmit, getFieldProps, touched, errors} = useFormik({
     initialValues: {
       email: '',
@@ -41,10 +50,17 @@ export const Header = ({signIn, authUser, betAmount, signOut}) => {
       }
     }
   })
-  const showCurrentComp = (modalBody, modalState) => {
+  const showCurrentComp = (modalBody: string, modalState: boolean) => {
     setModalBody(modalBody)
     setIsModalOpen(modalState)
   }
+
+  // const onClose = useCallback(() => {
+  //   // setIsOpen(prevValue => !prevValue)
+  // }, [])
+  React.useEffect(() => {
+    console.log('New methidcreated')
+  }, [setIsOpen])
   //       const betInfo = ()=>{
   //         // setBetType(betType)
   //         const modal = isModalOpen && betType ? (
@@ -170,7 +186,7 @@ export const Header = ({signIn, authUser, betAmount, signOut}) => {
                 </ul>
               </div>
             </div>
-            <User />
+            <UserIcon />
           </div>
         </div>
       </div>
@@ -189,7 +205,7 @@ export const Header = ({signIn, authUser, betAmount, signOut}) => {
             <Logo />
           </Link>
         </div>
-        <Sidebar closeModal={() => setIsOpen(false)} isOpen={isOpen} />
+        <Sidebar closeModal={() => onClose()} isOpen={isOpen} />
 
         <div className="uk-navbar-item uk-margin-auto-left header__options uk-padding-remove">
           {authUser ? (
@@ -238,11 +254,25 @@ export const Header = ({signIn, authUser, betAmount, signOut}) => {
   )
 }
 
-const mapStateToProps = state => {
+interface LinkStateProps {
+  authUser: authUser
+  betAmount: number
+}
+interface LinkDispatchProps {
+  signIn: (user: User) => void
+  signOut: () => void
+}
+const mapStateToProps = (state: AppState): LinkStateProps => {
   return {
     authUser: state.authUser,
     betAmount: state.betAmount
   }
 }
+const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>): LinkDispatchProps => {
+  return {
+    signIn: bindActionCreators(signIn, dispatch),
+    signOut: bindActionCreators(signOut, dispatch)
+  }
+}
 
-export default connect(mapStateToProps, {signIn, signOut})(Header)
+export default connect(mapStateToProps, mapDispatchToProps)(Header)

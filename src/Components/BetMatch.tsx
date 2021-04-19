@@ -1,15 +1,32 @@
-import React from 'react'
+import React, {FC} from 'react'
 import {connect} from 'react-redux'
 import {selectMatch} from '../store/actions'
 import {shortenText} from '../utils/utils'
 import {ReactComponent as Stats} from '../assets/icons/statistics.svg'
+import {betMatch, betSlipMatch} from '../types/types'
+import {AppState} from '../store/configureStore'
+import {bindActionCreators} from 'redux'
+import {ThunkDispatch} from 'redux-thunk'
+import {AppActions} from '../types/actions'
 
-const BetMatch = props => {
-  function selectMatch(market) {
+type ownProp = {
+  match: betMatch
+}
+type Props = LinkDispatchProps & LinkStateProps & ownProp
+const BetMatch: FC<Props> = props => {
+  function selectMatch(market: any) {
     // const matchIncluded = props.selectedMatches.some(match=> match.match_id === props.match.match_id)
     // if(!matchIncluded){
     //this means that the match is not included in the array so add it with checked: true
-    props.selectMatch({...market, checked: true, home_team: props.match.teams[0], away_team: props.match.teams[1], match_id: props.match.match_id, last_update: props.match.sites[0].last_update})
+    props.selectMatch({
+      market: market.market,
+      marketOdd: market.marketOdd,
+      checked: true,
+      home_team: props.match.teams[0],
+      away_team: props.match.teams[1],
+      match_id: props.match.match_id,
+      last_update: props.match.sites[0].last_update
+    })
     // }
     // else{
     //     //so the match is there, so it should be removed then. Call selectMatch and dont add the checked property, because that determines what happensa in the reducer
@@ -18,7 +35,7 @@ const BetMatch = props => {
     //     })
     // }
   }
-  const checkSelected = market => {
+  const checkSelected = (market: string) => {
     const foundSelected = props.selectedMatches.find(match => match.match_id === props.match.match_id)
     if (foundSelected && market === foundSelected.market) {
       return 'matchSelected'
@@ -73,8 +90,23 @@ const BetMatch = props => {
     </tr>
   )
 }
-const mapStateToProps = state => {
-  // console.log("moprps", state.posts)
-  return {selectedMatches: state.selectedMatches}
+
+interface LinkStateProps {
+  selectedMatches: betSlipMatch[]
 }
-export default connect(mapStateToProps, {selectMatch})(BetMatch)
+interface LinkDispatchProps {
+  selectMatch: (betDetails: betSlipMatch) => void
+}
+const mapStateToProps = (state: AppState): LinkStateProps => {
+  // console.log("moprps", state.posts)
+  return {
+    selectedMatches: state.selectedMatches
+  }
+}
+const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>): LinkDispatchProps => {
+  // console.log("moprps", state.posts)
+  return {
+    selectMatch: bindActionCreators(selectMatch, dispatch)
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(BetMatch)

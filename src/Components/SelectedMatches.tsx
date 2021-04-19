@@ -1,11 +1,17 @@
-import React from 'react'
+import React, {FC} from 'react'
 import {connect} from 'react-redux'
 import {selectMatch, clearSelectedMatches, removeMatch, checkMatch} from '../store/actions'
 import BetAmount from './BetAmount'
 import {ReactComponent as Football} from '../assets/icons/footbal.svg'
 import {ReactComponent as Cancel} from '../assets/icons/cancel.svg'
 import {shortenText} from '../utils/utils'
-export const SelectedMatches = props => {
+import {AppState} from '../store/configureStore'
+import {betSlipMatch, CheckMatch, RemoveMatch} from '../types/types'
+import {bindActionCreators} from 'redux'
+import {ThunkDispatch} from 'redux-thunk'
+import {AppActions} from '../types/actions'
+type Props = LinkDispatchProps & LinkStateProps
+export const SelectedMatches: FC<Props> = props => {
   const renderBody = () => {
     return (
       <div className="betinfo__body">
@@ -62,28 +68,38 @@ export const SelectedMatches = props => {
       )
     })
   }
-  const unCheck = (match_id, match_checked) => {
-    console.log(document.getElementById(match_id).checked)
-
-    // document.getElementById(match_id).checked = document.getElementById(match_id).checked
+  const unCheck = (match_id: string, match_checked: boolean) => {
     props.checkMatch({
       match_id,
       checked: !match_checked
-      // checked: document.getElementById(match_id).checked
     })
   }
   return <div>{renderBody()}</div>
 }
 
-const mapStateToProps = state => ({
-  selectedMatches: state.selectedMatches
-})
+interface LinkStateProps {
+  selectedMatches: betSlipMatch[]
+}
+interface LinkDispatchProps {
+  selectMatch: (betDetails: betSlipMatch) => void
+  clearSelectedMatches: () => void
+  removeMatch: (match: RemoveMatch) => void
+  checkMatch: (betDetails: CheckMatch) => void
+}
 
-const mapDispatchToProps = {
-  selectMatch,
-  clearSelectedMatches,
-  removeMatch,
-  checkMatch
+const mapStateToProps = (state: AppState): LinkStateProps => {
+  return {
+    selectedMatches: state.selectedMatches
+  }
+}
+
+const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>): LinkDispatchProps => {
+  return {
+    selectMatch: bindActionCreators(selectMatch, dispatch),
+    clearSelectedMatches: bindActionCreators(clearSelectedMatches, dispatch),
+    removeMatch: bindActionCreators(removeMatch, dispatch),
+    checkMatch: bindActionCreators(checkMatch, dispatch)
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SelectedMatches)

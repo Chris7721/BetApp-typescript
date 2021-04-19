@@ -1,13 +1,18 @@
-import React, {useState} from 'react'
-import {connect} from 'react-redux'
+import React, {FC, useState} from 'react'
 import SelectedMatches from './SelectedMatches'
 import Cashout from './Cashout'
 import BookBet from './BookBet'
+import {authUser, betSlipMatch, placedBet} from '../types/types'
 
-const BetInfo = props => {
-  const [currentComp, setCurrentComp] = useState('betslip')
+type CompProps = {
+  selectedMatches: betSlipMatch[]
+  authUser: authUser
+  placedBets: placedBet[]
+}
+const BetInfo: FC<CompProps> = props => {
+  const [currentComp, setCurrentComp] = useState<string>('betslip')
 
-  const checkCurrenturrentComp = comp => {
+  const checkCurrenturrentComp = (comp: string) => {
     return currentComp === comp ? 'active' : ''
   }
   const renderBody = () => {
@@ -17,7 +22,7 @@ const BetInfo = props => {
       }
       return <BookBet />
     }
-    return <Cashout />
+    return <Cashout authUser={props.authUser} placedBets={props.placedBets} />
   }
 
   return (
@@ -34,7 +39,5 @@ const BetInfo = props => {
     </div>
   )
 }
-const mapStateToProps = state => {
-  return {selectedMatches: state.selectedMatches, placedBets: state.placedBets}
-}
-export default connect(mapStateToProps, null)(BetInfo)
+
+export default BetInfo
