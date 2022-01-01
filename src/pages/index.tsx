@@ -1,7 +1,7 @@
 import React, {FC} from 'react'
 import {connect} from 'react-redux'
 import {fetchMatches} from '../store/actions'
-import BetGroup from '../Components/BetGroup'
+import BetGroup from '../Components/BetList'
 import {ReactComponent as Refresh} from '../assets/icons/refresh.svg'
 import {betMatch} from '../types/types'
 import {AppState} from '../store/configureStore'

@@ -98,13 +98,11 @@ interface LinkDispatchProps {
   selectMatch: (betDetails: betSlipMatch) => void
 }
 const mapStateToProps = (state: AppState): LinkStateProps => {
-  // console.log("moprps", state.posts)
   return {
     selectedMatches: state.selectedMatches
   }
 }
 const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>): LinkDispatchProps => {
-  // console.log("moprps", state.posts)
   return {
     selectMatch: bindActionCreators(selectMatch, dispatch)
   }

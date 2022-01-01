@@ -1,6 +1,6 @@
 import React, {FC, useState} from 'react'
-import SelectedMatches from './SelectedMatches'
-import Cashout from './Cashout'
+import SelectedMatches from './SelectedMatchesList'
+import Cashout from './PlacedBetList'
 import BookBet from './BookBet'
 import {authUser, betSlipMatch, placedBet} from '../types/types'
 

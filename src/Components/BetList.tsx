@@ -1,22 +1,22 @@
 import React, {ReactNode} from 'react'
 import {betMatch} from '../types/types'
-import BetMatch from './BetMatch'
+import BetMatch from './BetListItem'
 type Props = {
   matches: betMatch[]
 }
 const BetInfo = ({matches}: Props) => {
   const renderMatches = () => {
-    let theDates: number[] = []
-    matches.forEach((val: betMatch) => theDates.push(val.commence_time))
     let theUniques: number[] = []
-    theUniques = [...Array.from(new Set(theDates))]
-    const els: ReactNode[] = []
-    let previous: string = ''
+    const matchDomElements: ReactNode[] = []
+    let previousId: string = ''
+
+    theUniques = [...Array.from(new Set(matches.map((val: betMatch) => val.commence_time)))]
+
     theUniques.forEach((el, index, arr) => {
       let formatedUnix: string = `${new Date(el * 1000).getMonth()}/${new Date(el * 1000).getDate()}`
       let date = new Date(el * 1000)
-      if (previous !== formatedUnix) {
-        els.push(
+      if (previousId !== formatedUnix) {
+        matchDomElements.push(
           <tr key={el}>
             <td colSpan={2} className="match_date">{`${date.getDate().toString().length === 1 ? '0' + date.getDate() : date.getDate()}/${
               date.getMonth().toString().length === 1 ? '0' + (date.getMonth() + 1) : date.getMonth()
@@ -28,11 +28,11 @@ const BetInfo = ({matches}: Props) => {
       matches
         .filter(match => match.commence_time === el)
         .forEach((match, index, arr) => {
-          els.push(<BetMatch key={match.id} match={match} />)
+          matchDomElements.push(<BetMatch key={match.id} match={match} />)
         })
-      previous = `${new Date(el * 1000).getMonth()}/${new Date(el * 1000).getDate()}`
+      previousId = `${new Date(el * 1000).getMonth()}/${new Date(el * 1000).getDate()}`
     })
-    return els
+    return matchDomElements
   }
   return (
     <div className="betGroup">

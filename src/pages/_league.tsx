@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react'
 import {connect} from 'react-redux'
 import {fetchLeagueMatches} from '../store/actions'
-import BetGroup from '../Components/BetGroup'
+import BetGroup from '../Components/BetList'
 import {ReactComponent as Refresh} from '../assets/icons/refresh.svg'
 import {ReactComponent as LoadIcon} from '../assets/icons/money-bag.svg'
 import {betMatch} from '../types/types'

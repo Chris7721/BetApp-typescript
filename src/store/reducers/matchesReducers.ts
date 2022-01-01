@@ -1,4 +1,3 @@
-import {AppActions} from '../../types/actions'
 import {CHECK_MATCH, MatchesActionTypes, REMOVE_MATCH, REMOVE_MATCHES, SELECT_MATCH} from '../../types/matchActions'
 import {betMatch, betSlipMatch} from '../../types/types'
 
@@ -15,7 +14,7 @@ export const selectMatch = (state = selectedMatches, action: MatchesActionTypes)
   if (action.type === SELECT_MATCH) {
     const matchIncluded = state.find(match => match.match_id === action.payload.match_id)
     if (!matchIncluded) {
-      //this means the match is not there at all and you anna add it
+      //this means the match is not there at all and you wanna add it
       localStorage.setItem('state', JSON.stringify([...state, action.payload]))
       return [...state, action.payload]
     } else if (matchIncluded && matchIncluded.market === action.payload.market) {

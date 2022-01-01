@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import {ReactComponent as Arrow} from '../assets/icons/arrow.svg'
 import {authUser, placedBet} from '../types/types'
 import SingleBetMatch from './SingleBetMatch'
@@ -8,7 +8,6 @@ type ownProp = {
 }
 
 const Cashout = ({placedBets, authUser}: ownProp) => {
-  console.log('Cashout rerendered')
   const renderBets = () => {
     if (placedBets.length > 0) {
       return placedBets.map(bet => (

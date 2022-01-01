@@ -16,7 +16,7 @@ type ownProp = {
 type Props = LinkDispatchProps & LinkStateProps & ownProp
 const CreditAccount: FC<Props> = props => {
   const [crediting, setCrediting] = useState<boolean>(false)
-  const {values, handleSubmit, getFieldProps, touched, errors} = useFormik({
+  const {handleSubmit, getFieldProps, touched, errors} = useFormik({
     initialValues: {
       credit: 0
     },

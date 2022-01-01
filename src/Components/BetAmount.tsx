@@ -1,10 +1,10 @@
-import React, {useState, useEffect, FC} from 'react'
+import React, {useState, FC} from 'react'
 import {connect} from 'react-redux'
 import axios from 'axios'
 import {useFormik} from 'formik'
-import BetPlaced from './BetPlaced'
+import BetPlaced from './BetSuccess'
 import {ReactComponent as Cancel} from '../assets/icons/cancel.svg'
-import Modal from './Modal'
+import Modal from './ModalPortal'
 import {fetchBets} from '../store/actions'
 import {updateBetAmount} from '../store/actions/auth'
 import * as Yup from 'yup'
@@ -23,7 +23,7 @@ const BetAmount: FC<Props> = props => {
     validationSchema: Yup.object().shape({
       betAmount: Yup.number().min(100, 'Cannot be less than 100').max(props.betAmount, 'Bet Amount cannot exceed balance').positive('Amount cannot be negative').required('Required')
     }),
-    onSubmit(values) {
+    onSubmit() {
       try {
         placeBet('placed', true)
       } catch (err) {}
@@ -31,25 +31,15 @@ const BetAmount: FC<Props> = props => {
   })
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   const [betType, setBetType] = useState<string>('')
-  const [totalOdd, setTotalOdd] = useState<number>(0)
-  const [bonus, setBonus] = useState<number>(0)
-  const [potentialWin, setPotentialWin] = useState<number>(0)
   const setAmount = (amount: number) => {
     setFieldValue('betAmount', amount)
   }
-  const calcTotalOdd = () => {
-    const filteredMatches = props.selectedMatches.filter(match => match.checked === true)
-    const combinedOdd = filteredMatches.reduce((acc, item) => acc * Number(parseFloat(item.marketOdd)), 1)
-    setTotalOdd(filteredMatches.length === 0 ? 0 : combinedOdd)
-  }
+  const checkedMatches = props.selectedMatches.filter(match => match.checked === true)
+  const combinedOdd = checkedMatches.reduce((acc, item) => acc * Number(parseFloat(item.marketOdd)), 1)
 
-  const calcWinning = () => {
-    setPotentialWin(totalOdd * values.betAmount)
-  }
-
-  const calcBonus = () => {
-    setBonus(0.4 * potentialWin)
-  }
+  const totalOdd = combinedOdd
+  const potentialWin = totalOdd * values.betAmount
+  const bonus = 0.4 * potentialWin
 
   const showBetInfo = (betType: string, modalState: boolean) => {
     setBetType(betType)
@@ -86,20 +76,6 @@ const BetAmount: FC<Props> = props => {
       )
     return modal
   }
-
-  useEffect(() => {
-    calcTotalOdd()
-    calcWinning()
-    calcBonus()
-    return () => {
-      if (props.selectedMatches.length === 0) {
-        setTotalOdd(0)
-        values.betAmount = 0
-        setBonus(0)
-        setPotentialWin(0)
-      }
-    }
-  }, [props.selectedMatches, values.betAmount, totalOdd, bonus])
 
   return (
     <div className="betAmount">

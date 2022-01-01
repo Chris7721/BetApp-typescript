@@ -1,5 +1,5 @@
 import React from 'react'
-import {ReactComponent as Twitter} from '../assets/icons/twitter.svg'
+import {ReactComponent as Twitter} from '../../assets/icons/twitter.svg'
 export default function Footer() {
   return (
     <footer className="footer">

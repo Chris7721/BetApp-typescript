@@ -3,12 +3,12 @@ import {connect} from 'react-redux'
 import {Router, Route, Switch} from 'react-router-dom'
 import {addLocalStorage, fetchBets, fetchMatches, fetchLeagues} from '../store/actions'
 import '../assets/css/app.scss'
-import Header from './Header'
-import Leagues from './Leagues'
+import Header from './Nav/Header'
+import Footer from './Nav/Footer'
+import Leagues from './LeaguesList'
 import BetInfo from './BetInfo'
 import MainView from '../pages/index'
-import League from '../pages/League'
-import Footer from './Footer'
+import League from '../pages/_league'
 import MobileBets from './MobileBets'
 import history from '../history'
 import {ReactComponent as LoadIcon} from '../assets/icons/money-bag.svg'
@@ -23,31 +23,23 @@ import {refreshToken} from '../store/actions/auth'
 type Props = LinkDispatchProps & LinkStateProps
 
 const App: FC<Props> = props => {
+  const {addLocalStorage, fetchMatches, refreshToken, fetchBets, fetchLeagues, authUser} = props
   useEffect(() => {
+    async function initApp() {
+      const selectedMatches = localStorage.getItem('selectedMatches')
+      if (selectedMatches) {
+        addLocalStorage(JSON.parse(selectedMatches))
+      }
+      await fetchMatches('soccer_france_ligue_one')
+      await refreshToken()
+      if (authUser) {
+        await fetchBets(authUser.localId || '')
+      }
+      await fetchLeagues()
+    }
     initApp()
   }, [])
-  async function initApp() {
-    const selectedMatches = localStorage.getItem('selectedMatches')
-    if (selectedMatches) {
-      props.addLocalStorage(JSON.parse(selectedMatches))
-    }
-    await props.fetchMatches('soccer_france_ligue_one')
-    await props.refreshToken()
-    if (props.authUser) {
-      await props.fetchBets(props.authUser.localId || '')
-    }
-    await props.fetchLeagues()
-  }
-  const leg = [
-    {
-      active: true,
-      details: 'string',
-      group: 'string',
-      has_outrights: true,
-      key: 'string',
-      title: 'string'
-    }
-  ]
+
   return (
     <div className="app">
       <Router history={history}>
@@ -99,7 +91,6 @@ interface LinkDispatchProps {
 
 //this guy would merge the redux state to the component's prop
 const mapStateToProps = (state: AppState): LinkStateProps => {
-  // console.log("moprps", state.posts)
   return {
     appLoaded: state.appLoaded,
     authUser: state.authUser,
@@ -110,7 +101,6 @@ const mapStateToProps = (state: AppState): LinkStateProps => {
 }
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>): LinkDispatchProps => {
-  // console.log("moprps", state.posts)
   return {
     fetchBets: bindActionCreators(fetchBets, dispatch),
     refreshToken: bindActionCreators(refreshToken, dispatch),

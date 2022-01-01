@@ -1,25 +1,18 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
-import Leagues from './Leagues'
-import {ReactComponent as Cancel} from '../assets/icons/cancel.svg'
-import {ReactComponent as Home} from '../assets/icons/home.svg'
-import {ReactComponent as Search} from '../assets/icons/search.svg'
-import {ReactComponent as Live} from '../assets/icons/live.svg'
-import {ReactComponent as Jackpot} from '../assets/icons/jackpot.svg'
-import {ReactComponent as Livescore} from '../assets/icons/livescore.svg'
-import {ReactComponent as Virtual} from '../assets/icons/virtual.svg'
+import Leagues from '../LeaguesList'
+import {ReactComponent as Cancel} from '../../assets/icons/cancel.svg'
+import {ReactComponent as Home} from '../../assets/icons/home.svg'
+import {ReactComponent as Search} from '../../assets/icons/search.svg'
+import {ReactComponent as Live} from '../../assets/icons/live.svg'
+import {ReactComponent as Jackpot} from '../../assets/icons/jackpot.svg'
+import {ReactComponent as Livescore} from '../../assets/icons/livescore.svg'
+import {ReactComponent as Virtual} from '../../assets/icons/virtual.svg'
 type ownProps = {
   isOpen: boolean
   closeModal: Function
 }
 function Sidebar({isOpen, closeModal}: ownProps) {
-  console.log('sidebe re renderd')
-  React.useEffect(() => {
-    console.log('Close modal recreated')
-  }, [closeModal])
-  React.useEffect(() => {
-    console.log('isOpen recreated')
-  }, [isOpen])
   return (
     <div className={`sidebar-modal ${isOpen ? 'w-100' : 'w-0'}`}>
       <div className={`sidebar ${isOpen ? 'sidebar__show' : 'sidebar__no-show'}`}>

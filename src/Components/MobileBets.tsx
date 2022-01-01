@@ -1,9 +1,9 @@
 import React, {FC, useState} from 'react'
 import Transition from 'react-transition-group/Transition'
 import {ReactComponent as Arrow} from '../assets/icons/arrow.svg'
-import SelectedMatches from './SelectedMatches'
+import SelectedMatches from './SelectedMatchesList'
 import BookBet from './BookBet'
-import Cashout from './Cashout'
+import Cashout from './PlacedBetList'
 import {authUser, betSlipMatch, placedBet} from '../types/types'
 type ownProps = {
   authUser: authUser

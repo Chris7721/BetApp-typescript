@@ -1,28 +1,26 @@
 import React, {FC, useCallback, useState} from 'react'
 import * as Yup from 'yup'
-import Sidebar from './Sidebar'
-import Modal from './Modal'
-import UserForm from './UserForm'
-import CreditAccount from './CreditAccount'
+import Sidebar from './SideNav'
+import Modal from '../ModalPortal'
+import UserForm from '../AuthForm'
+import CreditAccount from './../CreditAccount'
 import {connect} from 'react-redux'
-import {signIn, signOut} from '../store/actions/auth'
+import {signIn, signOut} from '../../store/actions/auth'
 import {Link} from 'react-router-dom'
-import {ReactComponent as Cancel} from '../assets/icons/cancel.svg'
-import {ReactComponent as Logo} from '../assets/icons/logo.svg'
-import {ReactComponent as Visible} from '../assets/icons/visible.svg'
-import {ReactComponent as Menu} from '../assets/icons/menu.svg'
-import {ReactComponent as UserIcon} from '../assets/icons/user.svg'
-import {ReactComponent as Search} from '../assets/icons/search.svg'
-import {ReactComponent as Facebook} from '../assets/icons/facebook.svg'
+import {ReactComponent as Cancel} from '../../assets/icons/cancel.svg'
+import {ReactComponent as Logo} from '../../assets/icons/logo.svg'
+import {ReactComponent as Visible} from '../../assets/icons/visible.svg'
+import {ReactComponent as Menu} from '../../assets/icons/menu.svg'
+import {ReactComponent as UserIcon} from '../../assets/icons/user.svg'
+import {ReactComponent as Search} from '../../assets/icons/search.svg'
+import {ReactComponent as Facebook} from '../../assets/icons/facebook.svg'
 import {useFormik} from 'formik'
-import {authUser, User} from '../types/types'
-import {AppState} from '../store/configureStore'
+import {authUser, User} from '../../types/types'
+import {AppState} from '../../store/configureStore'
 import {ThunkDispatch} from 'redux-thunk'
-import {AppActions} from '../types/actions'
+import {AppActions} from '../../types/actions'
 import {bindActionCreators} from 'redux'
-const onClose = () => {
-  console.log('dance')
-}
+
 type Props = LinkDispatchProps & LinkStateProps
 export const Header: FC<Props> = ({signIn, authUser, betAmount, signOut}) => {
   const [error, setError] = useState<string>('')
@@ -55,9 +53,9 @@ export const Header: FC<Props> = ({signIn, authUser, betAmount, signOut}) => {
     setIsModalOpen(modalState)
   }
 
-  // const onClose = useCallback(() => {
-  //   // setIsOpen(prevValue => !prevValue)
-  // }, [])
+  const onClose = useCallback(() => {
+    setIsOpen(prevValue => !prevValue)
+  }, [])
   React.useEffect(() => {
     console.log('New methidcreated')
   }, [setIsOpen])

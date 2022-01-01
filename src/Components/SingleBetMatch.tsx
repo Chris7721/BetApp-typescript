@@ -1,5 +1,4 @@
-import React, {useState, useEffect, FC} from 'react'
-import {connect} from 'react-redux'
+import React, {useState, useEffect} from 'react'
 import {placedBet} from '../types/types'
 import {shortenText, months_names} from '../utils/utils'
 type ownProp = {
