@@ -10,7 +10,7 @@ export const convertObjectToArray = (object: any): betSlip[] => {
     const keys = Object.keys(object)
     for (let i = 0; i < keys.length; i++) {
       // const obj:betSlip = object[keys[i]]
-      betArrays.push({betId: keys[i], betAmount: object[keys[i]].amount, time: object[keys[i]].time, win: object[keys[i]].win, selectedMatches: object[keys[i]].selectedMatches})
+      betArrays.push({betId: keys[i], betAmount: object[keys[i]].betAmount, time: object[keys[i]].time, win: object[keys[i]].win, selectedMatches: object[keys[i]].selectedMatches})
     }
     return betArrays
   }

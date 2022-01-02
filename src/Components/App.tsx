@@ -26,16 +26,19 @@ const App: FC<Props> = props => {
   const {addLocalStorage, fetchMatches, refreshToken, fetchBets, fetchLeagues, authUser} = props
   useEffect(() => {
     async function initApp() {
-      const selectedMatches = localStorage.getItem('selectedMatches')
-      if (selectedMatches) {
-        addLocalStorage(JSON.parse(selectedMatches))
-      }
-      await fetchMatches('soccer_france_ligue_one')
-      await refreshToken()
-      if (authUser) {
-        await fetchBets(authUser.localId || '')
-      }
-      await fetchLeagues()
+      try {
+        const selectedMatches = localStorage.getItem('selectedMatches')
+        if (selectedMatches) {
+          addLocalStorage(JSON.parse(selectedMatches))
+        }
+        await fetchMatches('soccer_france_ligue_one')
+        await refreshToken()
+
+        // if (authUser) {
+        //   await fetchBets(authUser.localId || '')
+        // }
+        await fetchLeagues()
+      } catch (err) {}
     }
     initApp()
   }, [])

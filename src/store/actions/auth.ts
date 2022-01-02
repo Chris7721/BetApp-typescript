@@ -39,9 +39,7 @@ export const signIn = (user: User) => async (dispatch: Dispatch<AppActions>) => 
       ...user,
       returnSecureToken: true
     })
-    // console.log("the SIGNIN data is: ", response.data)
     const betAmount = await axios.get(`${FIREBASE_STORE_URL}/balance/${response.data.localId}.json`)
-    // console.log("The returned betAmount is: ", betAmount)
     dispatch({
       type: BET_AMOUNT,
       payload: betAmount.data.betAmount
@@ -88,6 +86,13 @@ export const refreshToken = () => async (dispatch: Dispatch<AppActions>) => {
           expiresIn: data.expires_in
         }
       })
+
+      const bets = await axios.get(`${process.env.REACT_APP_FIREBASE_STORE_URL}/betlist/${currentUser.data.users[0].localId}.json`)
+      dispatch({
+        type: FETCH_BETS,
+        payload: convertObjectToArray(bets.data)
+      })
+
       dispatch({
         type: APP_LOAD,
         payload: true

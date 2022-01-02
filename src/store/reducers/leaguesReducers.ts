@@ -19,7 +19,6 @@ export const fetchLeagueMatches = (state = leagueMatches, action: MatchesActionT
 
 export const leagueMatchesFetched = (leagueMatches = false, action: MatchesActionTypes) => {
   if (action.type === 'LEAGUES_MATCHES_FETCHED') {
-    // console.log("yepa" +action.payload)
     return action.payload
   }
   return leagueMatches

@@ -44,7 +44,6 @@ export const Header: FC<Props> = ({signIn, authUser, betAmount, signOut}) => {
         await signIn({email: values.email, password: values.password})
       } catch (err) {
         setError('Incorrect email/password')
-        console.log('lmaoo error')
       }
     }
   })
@@ -56,9 +55,7 @@ export const Header: FC<Props> = ({signIn, authUser, betAmount, signOut}) => {
   const onClose = useCallback(() => {
     setIsOpen(prevValue => !prevValue)
   }, [])
-  React.useEffect(() => {
-    console.log('New methidcreated')
-  }, [setIsOpen])
+  React.useEffect(() => {}, [setIsOpen])
   //       const betInfo = ()=>{
   //         // setBetType(betType)
   //         const modal = isModalOpen && betType ? (

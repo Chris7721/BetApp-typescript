@@ -22,7 +22,7 @@ export type betMatch = {
 
 export type placedBet = {
   betId: string
-  betAmount: string
+  betAmount: number
   time: number
   win: number
   selectedMatches: betSlipMatch[]

@@ -19,7 +19,6 @@ export const selectMatch = (state = selectedMatches, action: MatchesActionTypes)
       return [...state, action.payload]
     } else if (matchIncluded && matchIncluded.market === action.payload.market) {
       return state.filter(match => match.match_id !== action.payload.match_id)
-      // console.log(matchIncluded , action)
     }
   }
   // else if (action.type === 'ADD_LOCALSTORAGE') {

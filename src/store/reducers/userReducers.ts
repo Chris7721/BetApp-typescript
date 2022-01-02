@@ -1,5 +1,6 @@
 import {AppActions} from '../../types/actions'
 import {AuthActionTypes} from '../../types/authActions'
+import {FETCH_BETS} from '../../types/matchActions'
 import {authUser} from '../../types/types'
 
 const signedinUser: any = null
@@ -22,7 +23,7 @@ export const betAmount = (betAmount = null, action: AppActions) => {
 }
 
 export const placedBets = (placedBets = [], action: AppActions) => {
-  if (action.type === 'FETCH_BETS') {
+  if (action.type === FETCH_BETS) {
     return [...action.payload]
   }
   return placedBets

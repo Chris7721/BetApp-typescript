@@ -35,7 +35,6 @@ const UserForm: FC<Props> = ({signUp, onRegistered, currentComp, signIn}) => {
         onRegistered()
       } catch (err) {
         setError('Incorrect email/password')
-        console.log(err)
       }
     }
   })
