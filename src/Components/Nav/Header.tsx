@@ -68,7 +68,7 @@ export const Header: FC<Props> = ({signIn, authUser, betAmount, signOut}) => {
   //                 <CreditAccount betType={betType}/>
   //               </div>
   //             </Modal>
-  //           ) : ''
+  //           ) : ' '
   //           return modal
   //   }
   const ModalComp = (
