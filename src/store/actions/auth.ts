@@ -6,15 +6,17 @@ import {APP_LOAD, BET_AMOUNT, FETCH_BETS} from '../../types/matchActions'
 import {User} from '../../types/types'
 import {convertObjectToArray} from '../../utils/utils'
 import {AppState} from '../configureStore'
-const KEY = 'AIzaSyB7dKEaTf00MBiwAlkx9R5tjIhr9txA_2E'
+const KEY = process.env.REACT_APP_FIREBASE_KEY
+const FIREBASE_STORE_URL = process.env.REACT_APP_FIREBASE_STORE_URL
+const FIREBASE_AUTH_URL = process.env.REACT_APP_FIREBASE_AUTH_URL
 
 export const signUp = (user: User) => async (dispatch: Dispatch<AppActions>) => {
   try {
-    const response = await axios.post(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${KEY}`, {
+    const response = await axios.post(`${FIREBASE_AUTH_URL}:signUp?key=${KEY}`, {
       ...user,
       returnSecureToken: true
     })
-    const betAmount = await axios.put(`https://betapp-54dbf.firebaseio.com/balance/${response.data.localId}.json`, {
+    const betAmount = await axios.put(`${FIREBASE_STORE_URL}/balance/${response.data.localId}.json`, {
       betAmount: 1500
     })
     localStorage.setItem('refresh', response.data.refreshToken)
@@ -33,18 +35,18 @@ export const signUp = (user: User) => async (dispatch: Dispatch<AppActions>) => 
 
 export const signIn = (user: User) => async (dispatch: Dispatch<AppActions>) => {
   try {
-    const response = await axios.post(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${KEY}`, {
+    const response = await axios.post(`${FIREBASE_AUTH_URL}:signInWithPassword?key=${KEY}`, {
       ...user,
       returnSecureToken: true
     })
     // console.log("the SIGNIN data is: ", response.data)
-    const betAmount = await axios.get(`https://betapp-54dbf.firebaseio.com/balance/${response.data.localId}.json`)
+    const betAmount = await axios.get(`${FIREBASE_STORE_URL}/balance/${response.data.localId}.json`)
     // console.log("The returned betAmount is: ", betAmount)
     dispatch({
       type: BET_AMOUNT,
       payload: betAmount.data.betAmount
     })
-    const {data} = await axios.get(`https://betapp-54dbf.firebaseio.com/betlist/${response.data.localId}.json`)
+    const {data} = await axios.get(`${FIREBASE_STORE_URL}/betlist/${response.data.localId}.json`)
     dispatch({
       type: FETCH_BETS,
       payload: convertObjectToArray(data)
@@ -67,10 +69,10 @@ export const refreshToken = () => async (dispatch: Dispatch<AppActions>) => {
         grant_type: 'refresh_token',
         refresh_token: refreshToken
       })
-      const currentUser = await axios.post(`https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${KEY}`, {
+      const currentUser = await axios.post(`${FIREBASE_AUTH_URL}:lookup?key=${KEY}`, {
         idToken: data.id_token
       })
-      const betAmount = await axios.get(`https://betapp-54dbf.firebaseio.com/balance/${currentUser.data.users[0].localId}.json`)
+      const betAmount = await axios.get(`${FIREBASE_STORE_URL}/balance/${currentUser.data.users[0].localId}.json`)
       localStorage.setItem('refresh', data.refresh_token)
       dispatch({
         type: BET_AMOUNT,
@@ -116,11 +118,11 @@ export const signOut = () => (dispatch: Dispatch<AppActions>) => {
 
 export const makePayment = (user: User) => async (dispatch: Dispatch<AppActions>) => {
   try {
-    const response = await axios.post(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${KEY}`, {
+    const response = await axios.post(`${FIREBASE_AUTH_URL}:signUp?key=${KEY}`, {
       ...user,
       returnSecureToken: true
     })
-    const betAmount = await axios.put(`https://betapp-54dbf.firebaseio.com/balance/${response.data.localId}.json`, {
+    const betAmount = await axios.put(`${FIREBASE_STORE_URL}/balance/${response.data.localId}.json`, {
       betAmount: 1500
     })
     dispatch({
@@ -134,7 +136,7 @@ export const makePayment = (user: User) => async (dispatch: Dispatch<AppActions>
 
 export const updateBetAmount = (newBetAmount: number) => async (dispatch: Dispatch<AppActions>, getState: () => AppState) => {
   try {
-    const betAmount = await axios.put(`https://betapp-54dbf.firebaseio.com/balance/${getState().authUser.localId}.json`, {
+    const betAmount = await axios.put(`${FIREBASE_STORE_URL}/balance/${getState().authUser.localId}.json`, {
       betAmount: newBetAmount
     })
     dispatch({

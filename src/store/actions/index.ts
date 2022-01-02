@@ -45,7 +45,7 @@ export const fetchLeagues = () => async (dispatch: Dispatch<AppActions>, getStat
 }
 
 export const fetchBets = (userId: string) => async (dispatch: Dispatch<AppActions>, getState: () => AppState) => {
-  const {data} = await axios.get(`https://betapp-54dbf.firebaseio.com/betlist/${userId}.json`)
+  const {data} = await axios.get(`${process.env.REACT_APP_FIREBASE_STORE_URL}/betlist/${userId}.json`)
   dispatch({
     type: FETCH_BETS,
     payload: convertObjectToArray(data)

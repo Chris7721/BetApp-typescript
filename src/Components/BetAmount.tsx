@@ -47,7 +47,7 @@ const BetAmount: FC<Props> = props => {
   }
   const placeBet = async (betType: string, modalState: boolean) => {
     try {
-      await axios.post(`https://betapp-54dbf.firebaseio.com/betlist/${props.authUser.localId}.json`, {
+      await axios.post(`${process.env.REACT_APP_FIREBASE_STORE_URL}/betlist/${props.authUser.localId}.json`, {
         selectedMatches: props.selectedMatches,
         betAmount: values.betAmount,
         win: potentialWin + bonus,
